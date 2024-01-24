@@ -9,8 +9,13 @@ import (
 	"github.com/TTraveller7/invokerlib"
 )
 
+var splitterPc = &invokerlib.ProcessorCallbacks{
+	OnInit:  splitterInit,
+	Process: splitterProcess,
+}
+
 func SplitterHandler(w http.ResponseWriter, r *http.Request) {
-	invokerlib.ProcessorHandle(w, r, splitterProcess, splitterInit)
+	invokerlib.ProcessorHandle(w, r, splitterPc)
 }
 
 func splitterInit() {

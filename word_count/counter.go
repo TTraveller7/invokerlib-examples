@@ -8,8 +8,13 @@ import (
 	"github.com/TTraveller7/invokerlib"
 )
 
+var counterPc = &invokerlib.ProcessorCallbacks{
+	OnInit:  counterInit,
+	Process: counterProcess,
+}
+
 func CounterHandler(w http.ResponseWriter, r *http.Request) {
-	invokerlib.ProcessorHandle(w, r, counterProcess, counterInit)
+	invokerlib.ProcessorHandle(w, r, counterPc)
 }
 
 func counterInit() {
