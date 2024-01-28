@@ -2,7 +2,7 @@ module github.com/ttraveller7/invokerlib-examples/word_count
 
 go 1.19
 
-require github.com/TTraveller7/invokerlib v0.2.6
+require github.com/TTraveller7/invokerlib v0.2.7
 
 require (
 	github.com/IBM/sarama v1.42.1 // indirect
