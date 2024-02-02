@@ -18,8 +18,9 @@ func SplitterHandler(w http.ResponseWriter, r *http.Request) {
 	invokerlib.ProcessorHandle(w, r, splitterPc)
 }
 
-func splitterInit() {
+func splitterInit() error {
 	fmt.Printf("splitterInit called")
+	return nil
 }
 
 func splitterProcess(ctx context.Context, record *invokerlib.Record) error {
