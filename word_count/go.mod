@@ -2,12 +2,13 @@ module github.com/ttraveller7/invokerlib-examples/word_count
 
 go 1.19
 
-require github.com/TTraveller7/invokerlib v0.2.17
+require github.com/TTraveller7/invokerlib v0.3.0
 
 require (
 	github.com/IBM/sarama v1.42.1 // indirect
 	github.com/allegro/bigcache/v3 v3.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/coocood/freecache v1.2.4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/eapache/go-resiliency v1.4.0 // indirect
