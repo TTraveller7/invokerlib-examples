@@ -31,10 +31,10 @@ func counterInit() error {
 
 func counterProcess(ctx context.Context, record *invokerlib.Record) error {
 	val, err := stateStore.Get(ctx, record.Key)
-	if err != nil {
-		return err
+	var n uint64 = 0
+	if err == nil {
+		n = invokerlib.BytesToUint64(val)
 	}
-	n := invokerlib.BytesToUint64(val)
 	newVal := invokerlib.Uint64ToBytes(n + 1)
 	err = stateStore.Put(ctx, record.Key, newVal)
 	return err
