@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/TTraveller7/invokerlib"
+	"github.com/tiktoken-go/tokenizer"
 )
+
+var enc tokenizer.Codec
 
 var splitterPc = &invokerlib.ProcessorCallbacks{
 	OnInit:  splitterInit,
@@ -19,17 +20,22 @@ func SplitterHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func splitterInit() error {
-	fmt.Printf("splitterInit called")
-	return nil
+	var err error
+	enc, err = tokenizer.Get(tokenizer.Cl100kBase)
+	return err
 }
 
 func splitterProcess(ctx context.Context, record *invokerlib.Record) error {
 	valStr := string(record.Value)
-	words := strings.Split(valStr, " ")
-	for _, word := range words {
+	_, tokens, err := enc.Encode(valStr)
+	if err != nil {
+		return err
+	}
+
+	for _, token := range tokens {
 		r := &invokerlib.Record{
-			Key:   word,
-			Value: []byte(word),
+			Key:   token,
+			Value: []byte(token),
 		}
 		if err := invokerlib.PassToDefaultOutputTopic(ctx, r); err != nil {
 			return err
