@@ -21,7 +21,7 @@ func CounterHandler(w http.ResponseWriter, r *http.Request) {
 
 func counterInit() error {
 	var err error
-	stateStore, err = invokerlib.NewFreeCacheStateStore()
+	stateStore, err = invokerlib.NewRedisStateStore("state-redis")
 	if err != nil {
 		return err
 	}
