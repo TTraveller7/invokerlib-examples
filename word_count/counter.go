@@ -2,11 +2,9 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/TTraveller7/invokerlib/pkg/api"
-	"github.com/TTraveller7/invokerlib/pkg/logs"
 	"github.com/TTraveller7/invokerlib/pkg/models"
 	"github.com/TTraveller7/invokerlib/pkg/state"
 	"github.com/TTraveller7/invokerlib/pkg/utils"
@@ -35,14 +33,6 @@ func counterInit() error {
 }
 
 func counterProcess(ctx context.Context, record *models.Record) (counterProcErr error) {
-	defer func() {
-		if panicErr := recover(); panicErr != nil {
-			counterProcErr = fmt.Errorf("counterProcess panic: %v", panicErr)
-		}
-		if counterProcErr != nil {
-			logs.Printf("%v", counterProcErr)
-		}
-	}()
 	keyStr := string(record.Key())
 	val, err := stateStore.Get(ctx, keyStr)
 	var n uint64 = 0
