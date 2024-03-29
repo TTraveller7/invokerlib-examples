@@ -4,19 +4,21 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/TTraveller7/invokerlib"
+	"github.com/TTraveller7/invokerlib/pkg/api"
+	"github.com/TTraveller7/invokerlib/pkg/core"
+	"github.com/TTraveller7/invokerlib/pkg/models"
 	"github.com/tiktoken-go/tokenizer"
 )
 
 var enc tokenizer.Codec
 
-var splitterPc = &invokerlib.ProcessorCallbacks{
+var splitterPc = &models.ProcessorCallbacks{
 	OnInit:  splitterInit,
 	Process: splitterProcess,
 }
 
 func SplitterHandler(w http.ResponseWriter, r *http.Request) {
-	invokerlib.ProcessorHandle(w, r, splitterPc)
+	api.ProcessorHandle(w, r, splitterPc)
 }
 
 func splitterInit() error {
@@ -25,19 +27,19 @@ func splitterInit() error {
 	return err
 }
 
-func splitterProcess(ctx context.Context, record *invokerlib.Record) error {
-	valStr := string(record.Value)
+func splitterProcess(ctx context.Context, record *models.Record) error {
+	valStr := string(record.Value())
 	_, tokens, err := enc.Encode(valStr)
 	if err != nil {
 		return err
 	}
 
 	for _, token := range tokens {
-		r := &invokerlib.Record{
+		r := &models.Record{
 			Key:   token,
 			Value: []byte(token),
 		}
-		if err := invokerlib.PassToDefaultOutputTopic(ctx, r); err != nil {
+		if err := core.PassToDefaultOutputTopic(ctx, r); err != nil {
 			return err
 		}
 	}

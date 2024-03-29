@@ -4,38 +4,42 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/TTraveller7/invokerlib"
+	"github.com/TTraveller7/invokerlib/pkg/api"
+	"github.com/TTraveller7/invokerlib/pkg/models"
+	"github.com/TTraveller7/invokerlib/pkg/state"
+	"github.com/TTraveller7/invokerlib/pkg/utils"
 )
 
 var (
-	counterPc = &invokerlib.ProcessorCallbacks{
+	counterPc = &models.ProcessorCallbacks{
 		OnInit:  counterInit,
 		Process: counterProcess,
 	}
-	stateStore invokerlib.StateStore
+	stateStore state.StateStore
 )
 
 func CounterHandler(w http.ResponseWriter, r *http.Request) {
-	invokerlib.ProcessorHandle(w, r, counterPc)
+	api.ProcessorHandle(w, r, counterPc)
 }
 
 func counterInit() error {
 	var err error
-	stateStore, err = invokerlib.NewRedisStateStore("state-redis")
+	stateStore, err = state.NewRedisStateStore("state-redis")
 	if err != nil {
 		return err
 	}
-	invokerlib.AddStateStore("counter_state_store", stateStore)
+	state.AddStateStore("counter_state_store", stateStore)
 	return nil
 }
 
-func counterProcess(ctx context.Context, record *invokerlib.Record) error {
-	val, err := stateStore.Get(ctx, record.Key)
+func counterProcess(ctx context.Context, record *models.Record) error {
+	keyStr := string(record.Key())
+	val, err := stateStore.Get(ctx, keyStr)
 	var n uint64 = 0
 	if err == nil {
-		n = invokerlib.BytesToUint64(val)
+		n = utils.BytesToUint64(val)
 	}
-	newVal := invokerlib.Uint64ToBytes(n + 1)
-	err = stateStore.Put(ctx, record.Key, newVal)
+	newVal := utils.Uint64ToBytes(n + 1)
+	err = stateStore.Put(ctx, keyStr, newVal)
 	return err
 }
