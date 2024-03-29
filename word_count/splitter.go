@@ -35,10 +35,8 @@ func splitterProcess(ctx context.Context, record *models.Record) error {
 	}
 
 	for _, token := range tokens {
-		r := &models.Record{
-			Key:   token,
-			Value: []byte(token),
-		}
+		tokenBytes := []byte(token)
+		r := models.NewRecord(tokenBytes, tokenBytes)
 		if err := core.PassToDefaultOutputTopic(ctx, r); err != nil {
 			return err
 		}
