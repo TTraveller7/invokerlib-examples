@@ -1,7 +1,7 @@
 github.com/IBM/sarama v1.42.1 h1:wugyWa15TDEHh2kvq2gAy1IHLjEjuYOYgXz/ruC/OSQ=
 github.com/IBM/sarama v1.42.1/go.mod h1:Xxho9HkHd4K/MDUo/T/sOqwtX/17D33++E9Wib6hUdQ=
-github.com/TTraveller7/invokerlib v0.4.8 h1:L6I6DzVPVfxgrKauxeA00b5p1F9Sfl/94fusCEhNopo=
-github.com/TTraveller7/invokerlib v0.4.8/go.mod h1:CepwyLjIz5Po5UuKA89YaQ4QGseRyQp7F4Q8s+LHx1c=
+github.com/TTraveller7/invokerlib v0.4.9 h1:8RCHHlhyXA4X4xjpM1blXVX2kooJBnKjQP4W3W/m7HE=
+github.com/TTraveller7/invokerlib v0.4.9/go.mod h1:CepwyLjIz5Po5UuKA89YaQ4QGseRyQp7F4Q8s+LHx1c=
 github.com/allegro/bigcache/v3 v3.1.0 h1:H2Vp8VOvxcrB91o86fUSVJFqeuz8kpyyB02eH3bSzwk=
 github.com/allegro/bigcache/v3 v3.1.0/go.mod h1:aPyh7jEvrog9zAwx5N7+JUQX5dZTSGpxF1LAR4dr35I=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
