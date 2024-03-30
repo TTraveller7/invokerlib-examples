@@ -3,7 +3,7 @@ module github.com/ttraveller7/invokerlib-examples/word_count
 go 1.19
 
 require (
-	github.com/TTraveller7/invokerlib v0.4.7
+	github.com/TTraveller7/invokerlib v0.4.8
 	github.com/tiktoken-go/tokenizer v0.1.0
 )
 
