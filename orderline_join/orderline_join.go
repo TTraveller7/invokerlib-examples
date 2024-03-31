@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/TTraveller7/invokerlib/pkg/api"
-	"github.com/TTraveller7/invokerlib/pkg/logs"
+	"github.com/TTraveller7/invokerlib/pkg/core"
 	"github.com/TTraveller7/invokerlib/pkg/models"
 	"github.com/TTraveller7/invokerlib/pkg/utils"
 	"github.com/bytedance/sonic"
@@ -13,12 +13,19 @@ import (
 
 var (
 	orderlineJoinPc = &models.ProcessorCallbacks{
-		Join: orderlineJoin,
+		OnInit: orderlineInit,
+		Join:   orderlineJoin,
 	}
+	metricsClient *utils.MetricsClient
 )
 
 func OrderlineJoinHandler(w http.ResponseWriter, r *http.Request) {
 	api.ProcessorHandle(w, r, orderlineJoinPc)
+}
+
+func orderlineInit() error {
+	metricsClient = core.MetricsClient()
+	return nil
 }
 
 func orderlineJoin(ctx context.Context, leftRecord *models.Record, rightRecord *models.Record) error {
@@ -46,6 +53,11 @@ func orderlineJoin(ctx context.Context, leftRecord *models.Record, rightRecord *
 		Quantity:  orderline.Quantity,
 		DistInfo:  orderline.DistInfo,
 	}
-	logs.Printf("full order line produced: %s", utils.SafeJsonIndent(fullOrderline))
+	fullOlBytes, _ := sonic.Marshal(fullOrderline)
+	newRecord := models.NewRecord(rightRecord.Key(), fullOlBytes)
+	if err := core.PassToDefaultOutputTopic(ctx, newRecord); err != nil {
+		return err
+	}
+	metricsClient.EmitCounter("num_of_full_orderline", "number of full orderline record assembled", 1)
 	return nil
 }
