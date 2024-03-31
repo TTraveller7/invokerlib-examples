@@ -1,11 +1,8 @@
-module github.com/ttraveller7/invokerlib-examples/word_count
+module github.com/ttraveller7/invokerlib-examples/orderline_join
 
 go 1.19
 
-require (
-	github.com/TTraveller7/invokerlib v0.5.1
-	github.com/tiktoken-go/tokenizer v0.1.0
-)
+require github.com/TTraveller7/invokerlib v0.5.1
 
 require (
 	github.com/IBM/sarama v1.42.1 // indirect
@@ -16,7 +13,6 @@ require (
 	github.com/coocood/freecache v1.2.4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/dlclark/regexp2 v1.9.0 // indirect
 	github.com/eapache/go-resiliency v1.4.0 // indirect
 	github.com/eapache/go-xerial-snappy v0.0.0-20230731223053-c322873962e3 // indirect
 	github.com/eapache/queue v1.1.0 // indirect
