@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
+	"math/rand"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/TTraveller7/invokerlib/pkg/api"
@@ -27,8 +29,23 @@ func orderlineParseProcess(ctx context.Context, record *models.Record) (orderlin
 	if err != nil {
 		return err
 	}
+
+	if ol.OlNumber == 1 {
+		o := &Order{
+			Wid:       ol.Wid,
+			Did:       ol.Did,
+			Oid:       ol.Oid,
+			CarrierId: int64(rand.Int()),
+		}
+		oBytes, _ := sonic.Marshal(o)
+		orderRecord := models.NewRecord(strconv.FormatInt(o.Oid, 10), oBytes)
+		if err := core.PassToOutputTopic(ctx, "orderparse", orderRecord); err != nil {
+			return err
+		}
+	}
+
 	olBytes, _ := sonic.Marshal(ol)
-	orderlineId := fmt.Sprintf("%v_%v", ol.oid, ol.olNumber)
+	orderlineId := fmt.Sprintf("%v_%v", ol.Oid, ol.OlNumber)
 	newRecord := models.NewRecord(orderlineId, olBytes)
 	if err := core.PassToDefaultOutputTopic(ctx, newRecord); err != nil {
 		return err
@@ -44,16 +61,16 @@ func parseOrderline(val []byte) (*Orderline, error) {
 		return nil, fmt.Errorf("parse orderline failed: length of words less than 10")
 	}
 	ol := &Orderline{
-		wid:       SafeParseInt64(words[0]),
-		did:       SafeParseInt64(words[1]),
-		oid:       SafeParseInt64(words[2]),
-		olNumber:  SafeParseInt64(words[3]),
-		iid:       SafeParseInt64(words[4]),
-		deliveryD: SafeParseTime(words[5]),
-		amount:    SafeParseFloat64(words[6]),
-		supplyWid: SafeParseInt64(words[7]),
-		quantity:  SafeParseInt64(words[8]),
-		distInfo:  words[9],
+		Wid:       SafeParseInt64(words[0]),
+		Did:       SafeParseInt64(words[1]),
+		Oid:       SafeParseInt64(words[2]),
+		OlNumber:  SafeParseInt64(words[3]),
+		Iid:       SafeParseInt64(words[4]),
+		DeliveryD: SafeParseTime(words[5]),
+		Amount:    SafeParseFloat64(words[6]),
+		SupplyWid: SafeParseInt64(words[7]),
+		Quantity:  SafeParseInt64(words[8]),
+		DistInfo:  words[9],
 	}
 	return ol, nil
 }

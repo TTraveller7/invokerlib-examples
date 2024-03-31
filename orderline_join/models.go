@@ -3,43 +3,35 @@ package main
 import "time"
 
 type Order struct {
-	wid       int64
-	did       int64
-	oid       int64
-	cid       int64
-	carrierId int64
-	olCnt     int64
-	allLocal  int64
-	entryD    time.Time
+	Wid       int64 `json:"wid"`
+	Did       int64 `json:"did"`
+	Oid       int64 `json:"oid"`
+	CarrierId int64 `json:"carrier_id"`
 }
 
 type Orderline struct {
-	wid       int64
-	did       int64
-	oid       int64
-	olNumber  int64
-	iid       int64
-	deliveryD time.Time
-	amount    float64
-	supplyWid int64
-	quantity  int64
-	distInfo  string
+	Wid       int64     `json:"wid"`
+	Did       int64     `json:"did"`
+	Oid       int64     `json:"oid"`
+	OlNumber  int64     `json:"ol_number"`
+	Iid       int64     `json:"iid"`
+	DeliveryD time.Time `json:"delivery_d"`
+	Amount    float64   `json:"amount"`
+	SupplyWid int64     `json:"supply_wid"`
+	Quantity  int64     `json:"quantity"`
+	DistInfo  string    `json:"dist_info"`
 }
 
 type FullOrderline struct {
-	wid       int64
-	did       int64
-	oid       int64
-	cid       int64
-	carrierId int64
-	olCnt     int64
-	allLocal  int64
-	entryD    time.Time
-	olNumber  int64
-	iid       int64
-	deliveryD time.Time
-	amount    float64
-	supplyWid int64
-	quantity  int64
-	distInfo  string
+	Wid       int64     `json:"wid"`
+	Did       int64     `json:"did"`
+	Oid       int64     `json:"oid"`
+	CarrierId int64     `json:"carrier_id"`
+	OlNumber  int64     `json:"ol_number"`
+	Iid       int64     `json:"iid"`
+	DeliveryD time.Time `json:"delivery_d"`
+	Amount    float64   `json:"amount"`
+	SupplyWid int64     `json:"supply_wid"`
+	Quantity  int64     `json:"quantity"`
+	DistInfo  string    `json:"dist_info"`
 }
