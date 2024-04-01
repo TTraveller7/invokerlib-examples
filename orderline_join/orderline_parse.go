@@ -3,15 +3,16 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"math/rand"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
 
 	"github.com/TTraveller7/invokerlib/pkg/api"
 	"github.com/TTraveller7/invokerlib/pkg/core"
-	"github.com/TTraveller7/invokerlib/pkg/logs"
 	"github.com/TTraveller7/invokerlib/pkg/models"
 	"github.com/bytedance/sonic"
 )
@@ -22,6 +23,7 @@ var (
 	}
 	ErrIllFormat = fmt.Errorf("ill format record")
 	orderIds     = sync.Map{}
+	logs         = log.New(os.Stdout, "", log.LstdFlags|log.Lshortfile)
 )
 
 func OrderlineParseHandler(w http.ResponseWriter, r *http.Request) {
