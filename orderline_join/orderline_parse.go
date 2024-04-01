@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/TTraveller7/invokerlib/pkg/api"
 	"github.com/TTraveller7/invokerlib/pkg/core"
@@ -20,7 +21,7 @@ var (
 		Process: orderlineParseProcess,
 	}
 	ErrIllFormat = fmt.Errorf("ill format record")
-	orderIds     = make(map[int64]bool, 0)
+	orderIds     = sync.Map{}
 )
 
 func OrderlineParseHandler(w http.ResponseWriter, r *http.Request) {
@@ -33,7 +34,7 @@ func orderlineParseProcess(ctx context.Context, record *models.Record) (orderlin
 		return nil
 	}
 
-	if !orderIds[ol.Oid] {
+	if _, exists := orderIds.Load(ol.Oid); !exists {
 		o := &Order{
 			Wid:       ol.Wid,
 			Did:       ol.Did,
@@ -45,7 +46,7 @@ func orderlineParseProcess(ctx context.Context, record *models.Record) (orderlin
 		if err := core.PassToOutputTopic(ctx, "orderparse", orderRecord); err != nil {
 			return err
 		}
-		orderIds[ol.Oid] = true
+		orderIds.Store(ol.Oid, true)
 	}
 
 	olBytes, _ := sonic.Marshal(ol)
