@@ -19,6 +19,8 @@ var (
 	orderlineParsePc = &models.ProcessorCallbacks{
 		Process: orderlineParseProcess,
 	}
+	ErrIllFormat = fmt.Errorf("ill format record")
+	orderIds     = make(map[int64]bool, 0)
 )
 
 func OrderlineParseHandler(w http.ResponseWriter, r *http.Request) {
@@ -28,10 +30,10 @@ func OrderlineParseHandler(w http.ResponseWriter, r *http.Request) {
 func orderlineParseProcess(ctx context.Context, record *models.Record) (orderlineProcessErr error) {
 	ol, err := parseOrderline(record.Value())
 	if err != nil {
-		return err
+		return nil
 	}
 
-	if ol.OlNumber == 1 {
+	if !orderIds[ol.Oid] {
 		o := &Order{
 			Wid:       ol.Wid,
 			Did:       ol.Did,
@@ -43,6 +45,7 @@ func orderlineParseProcess(ctx context.Context, record *models.Record) (orderlin
 		if err := core.PassToOutputTopic(ctx, "orderparse", orderRecord); err != nil {
 			return err
 		}
+		orderIds[ol.Oid] = true
 	}
 
 	olBytes, _ := sonic.Marshal(ol)
@@ -60,7 +63,7 @@ func parseOrderline(val []byte) (*Orderline, error) {
 	words := strings.Split(string(val), ",")
 	if len(words) < 10 {
 		logs.Printf("parse orderline failed: length of words less than 10: %s", string(val))
-		return &Orderline{}, nil
+		return nil, ErrIllFormat
 	}
 	ol := &Orderline{
 		Wid:       SafeParseInt64(words[0]),
