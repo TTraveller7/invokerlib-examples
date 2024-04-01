@@ -37,13 +37,14 @@ func orderlineJoin(ctx context.Context, leftRecord *models.Record, rightRecord *
 	if err := sonic.Unmarshal(rightRecord.Value(), &orderline); err != nil {
 		return err
 	}
-	if order.Oid != orderline.Oid {
+	if order.OrderId != orderline.OrderId {
 		return nil
 	}
 	fullOrderline := &FullOrderline{
 		Wid:       order.Wid,
 		Did:       order.Did,
 		Oid:       order.Oid,
+		OrderId:   order.OrderId,
 		CarrierId: order.CarrierId,
 		OlNumber:  orderline.OlNumber,
 		Iid:       orderline.Iid,

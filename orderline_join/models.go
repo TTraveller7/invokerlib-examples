@@ -3,16 +3,18 @@ package main
 import "time"
 
 type Order struct {
-	Wid       int64 `json:"wid"`
-	Did       int64 `json:"did"`
-	Oid       int64 `json:"oid"`
-	CarrierId int64 `json:"carrier_id"`
+	Wid       int64  `json:"wid"`
+	Did       int64  `json:"did"`
+	Oid       int64  `json:"oid"`
+	OrderId   string `json:"order_id"`
+	CarrierId int64  `json:"carrier_id"`
 }
 
 type Orderline struct {
 	Wid       int64     `json:"wid"`
 	Did       int64     `json:"did"`
 	Oid       int64     `json:"oid"`
+	OrderId   string    `json:"order_id"`
 	OlNumber  int64     `json:"ol_number"`
 	Iid       int64     `json:"iid"`
 	DeliveryD time.Time `json:"delivery_d"`
@@ -26,6 +28,7 @@ type FullOrderline struct {
 	Wid       int64     `json:"wid"`
 	Did       int64     `json:"did"`
 	Oid       int64     `json:"oid"`
+	OrderId   string    `json:"order_id"`
 	CarrierId int64     `json:"carrier_id"`
 	OlNumber  int64     `json:"ol_number"`
 	Iid       int64     `json:"iid"`

@@ -7,9 +7,9 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/TTraveller7/invokerlib/pkg/api"
 	"github.com/TTraveller7/invokerlib/pkg/core"
@@ -36,28 +36,29 @@ func orderlineParseProcess(ctx context.Context, record *models.Record) (orderlin
 		return nil
 	}
 
-	if _, exists := orderIds.Load(ol.Oid); !exists {
+	if _, exists := orderIds.Load(ol.OrderId); !exists {
 		o := &Order{
 			Wid:       ol.Wid,
 			Did:       ol.Did,
 			Oid:       ol.Oid,
+			OrderId:   ol.OrderId,
 			CarrierId: int64(rand.Int()),
 		}
 		oBytes, _ := sonic.Marshal(o)
-		orderRecord := models.NewRecord(strconv.FormatInt(o.Oid, 10), oBytes)
+		orderRecord := models.NewRecord(o.OrderId, oBytes)
 		if err := core.PassToOutputTopic(ctx, "orderparse", orderRecord); err != nil {
 			return err
 		}
-		orderIds.Store(ol.Oid, true)
+		orderIds.Store(ol.OrderId, true)
 	}
 
 	olBytes, _ := sonic.Marshal(ol)
-	orderlineId := fmt.Sprintf("%v_%v", ol.Oid, ol.OlNumber)
+	orderlineId := fmt.Sprintf("%v_%v", ol.OrderId, ol.OlNumber)
 	newRecord := models.NewRecord(orderlineId, olBytes)
 	if err := core.PassToDefaultOutputTopic(ctx, newRecord); err != nil {
 		return err
 	}
-
+	time.Sleep(200 * time.Millisecond)
 	return nil
 }
 
@@ -80,5 +81,6 @@ func parseOrderline(val []byte) (*Orderline, error) {
 		Quantity:  SafeParseInt64(words[8]),
 		DistInfo:  words[9],
 	}
+	ol.OrderId = fmt.Sprintf("%v_%v_%v", ol.Wid, ol.Did, ol.Oid)
 	return ol, nil
 }
