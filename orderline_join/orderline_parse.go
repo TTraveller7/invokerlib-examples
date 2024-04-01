@@ -10,6 +10,7 @@ import (
 
 	"github.com/TTraveller7/invokerlib/pkg/api"
 	"github.com/TTraveller7/invokerlib/pkg/core"
+	"github.com/TTraveller7/invokerlib/pkg/logs"
 	"github.com/TTraveller7/invokerlib/pkg/models"
 	"github.com/bytedance/sonic"
 )
@@ -58,7 +59,8 @@ func orderlineParseProcess(ctx context.Context, record *models.Record) (orderlin
 func parseOrderline(val []byte) (*Orderline, error) {
 	words := strings.Split(string(val), ",")
 	if len(words) < 10 {
-		return nil, fmt.Errorf("parse orderline failed: length of words less than 10")
+		logs.Printf("parse orderline failed: length of words less than 10: %s", string(val))
+		return &Orderline{}, nil
 	}
 	ol := &Orderline{
 		Wid:       SafeParseInt64(words[0]),
