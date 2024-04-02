@@ -3,7 +3,7 @@ module github.com/ttraveller7/invokerlib-examples/orderline_join
 go 1.19
 
 require (
-	github.com/TTraveller7/invokerlib v0.5.21
+	github.com/TTraveller7/invokerlib v0.5.22
 	github.com/bytedance/sonic v1.11.3
 )
 
