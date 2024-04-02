@@ -58,7 +58,7 @@ func orderlineParseProcess(ctx context.Context, record *models.Record) (orderlin
 	if err := core.PassToDefaultOutputTopic(ctx, newRecord); err != nil {
 		return err
 	}
-	time.Sleep(10 * time.Millisecond)
+	time.Sleep(5 * time.Millisecond)
 	return nil
 }
 
